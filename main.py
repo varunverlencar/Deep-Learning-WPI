@@ -65,7 +65,7 @@ print "read validation"
 # y_test = np_utils.to_categorical(y_test)
 # num_classes = y_test.shape[1]
 
-learn_r= 0.01
+learn_r= 0.0000001
 dec = 0.0000
 reg = 0
 # define a simple CNN model
@@ -83,16 +83,26 @@ def baseline_model():
 	model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 	model.add(Dropout(0.3))
 
+	model.add(ZeroPadding2D((1, 1)))
+	model.add(Convolution2D(128, 3, 3, activation='relu', name='conv2_1'))
+	model.add(ZeroPadding2D((1, 1)))
+	model.add(Convolution2D(128, 3, 3, activation='relu', name='conv2_2'))
+	model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+	model.add(Dropout(0.3))
+
 	# model.add(ZeroPadding2D((1, 1)))
-	# model.add(Convolution2D(128, 3, 3, activation='relu', name='conv2_1'))
+	# model.add(Convolution2D(256, 3, 3, activation='relu', name='conv3_1'))
 	# model.add(ZeroPadding2D((1, 1)))
-	# model.add(Convolution2D(128, 3, 3, activation='relu', name='conv2_2'))
+	# model.add(Convolution2D(256, 3, 3, activation='relu', name='conv3_2'))
+	# model.add(ZeroPadding2D((1, 1)))
+	# model.add(Convolution2D(256, 3, 3, activation='relu', name='conv3_3'))
 	# model.add(MaxPooling2D((2, 2), strides=(2, 2)))
-	# model.add(Dropout(0.3))
 
 	model.add(Flatten())
-	model.add(Dense(64, activation='relu'))
+	model.add(Dense(128	, activation='relu'))
 	model.add(Dropout(0.3))
+	# model.add(Dense(256	, activation='relu'))
+	# model.add(Dropout(0.3))
 	model.add(Dense(5, activation='softmax'))
 
 	opt = Adam(lr=learn_r, beta_1=0.9, beta_2=0.999, epsilon=1e-8, decay=dec)
@@ -103,7 +113,7 @@ def baseline_model():
 # build the model
 model = baseline_model()
 print "model built"
-print model.summary
+print model.summary()
 
 i=10
 j=15
@@ -122,10 +132,11 @@ history = model.fit_generator(
 	validation_data=validation_generator,
 	nb_val_samples=800,
 	verbose = 2)
+
 model.save_weights('first_try.h5')
 
 scores = evaluate_generator(validation_generator,
-	val_samples = 800)
+	val_samples = 2000)
 print("Error: %.2f%%, for nb_epoch=%d batch_size=%d" % (100-scores[1]*100,j,i))
 
 # Final evaluation of the model
