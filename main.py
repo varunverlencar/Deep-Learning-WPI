@@ -17,6 +17,8 @@ from keras.layers.noise import GaussianNoise
 from keras.preprocessing.image import ImageDataGenerator
 import csv
 import h5py
+import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 from keras import backend as K
 K.set_image_dim_ordering('th')
@@ -101,8 +103,8 @@ def baseline_model():
 	model.add(Flatten())
 	model.add(Dense(128	, activation='relu'))
 	model.add(Dropout(0.3))
-	# model.add(Dense(256	, activation='relu'))
-	# model.add(Dropout(0.3))
+	model.add(Dense(128	, activation='relu'))
+	model.add(Dropout(0.3))
 	model.add(Dense(5, activation='softmax'))
 
 	opt = Adam(lr=learn_r, beta_1=0.9, beta_2=0.999, epsilon=1e-8, decay=dec)
