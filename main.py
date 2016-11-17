@@ -68,7 +68,7 @@ print "read validation"
 # num_classes = y_test.shape[1]
 
 learn_r= 0.0000001
-dec = 0.0000
+dec = 0.000000005
 reg = 0
 # define a simple CNN model
 def baseline_model():
@@ -122,9 +122,9 @@ j=15
 # Fit the model
 # history = model.fit(X_train, y_train, validation_data=(X_test, y_test), nb_epoch=j, batch_size=i,shuffle=True, verbose=2)
 
-# filepath="weights.best.hdf5"
-# checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
-# callbacks_list = [checkpoint]
+filepath="weights.best.hdf5"
+checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+callbacks_list = [checkpoint]
 
 print 'fitting model'
 history = model.fit_generator(
@@ -133,7 +133,8 @@ history = model.fit_generator(
 	nb_epoch=50,
 	validation_data=validation_generator,
 	nb_val_samples=800,
-	verbose = 2)
+	verbose = 2
+	callback = callbacks_list)
 
 model.save_weights('first_try.h5')
 
