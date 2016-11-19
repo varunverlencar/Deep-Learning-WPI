@@ -4,7 +4,7 @@
 #
 # Simple CNN for the MNIST Dataset
 import numpy
-from keras.datasets import mnist
+from keras.callbacks import ModelCheckpoint
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Dropout
@@ -122,9 +122,6 @@ j=15
 # Fit the model
 # history = model.fit(X_train, y_train, validation_data=(X_test, y_test), nb_epoch=j, batch_size=i,shuffle=True, verbose=2)
 
-filepath="weights.best.hdf5"
-checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
-callbacks_list = [checkpoint]
 
 print 'fitting model'
 history = model.fit_generator(
@@ -137,6 +134,9 @@ history = model.fit_generator(
 	callback = callbacks_list)
 
 model.save_weights('first_try.h5')
+filepath= 'first_try.h5'
+checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+callbacks_list = [checkpoint]
 
 scores = evaluate_generator(validation_generator,
 	val_samples = 2000)
