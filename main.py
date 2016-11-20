@@ -73,9 +73,9 @@ test_generator = test_datagen.flow_from_directory(
 
 print "validation data read"
 
-learn_r= 0.000001
-dec = 0.0000000005
-reg = 0.0000001
+learn_r= 0.0001
+dec = 0.0000005
+reg = 0.000001
 
 # define a simple CNN model
 def baseline_model():
@@ -116,8 +116,8 @@ model = baseline_model()
 print "model built"
 print model.summary()
 
-i=10000 #samples_per_epoch
-j=3000 #nb_val_samples
+i=3000 #samples_per_epoch
+j=990 #nb_val_samples
 
 filepath="weights.best.hdf5"
 checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
