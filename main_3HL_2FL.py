@@ -47,7 +47,7 @@ test_datagen = ImageDataGenerator(rescale=1./255)
 train_generator = train_datagen.flow_from_directory(
 	'dataset/train',  # this is the target directory
 	target_size=(224, 224),
-	batch_size=10,
+	batch_size=10,g
 	shuffle = True,
 	class_mode='categorical')  
 
@@ -164,7 +164,8 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='lower right')
-plt.savefig(folder + "First_accuracy_val-Err=%.2f%%_test-Err=%.2f%%_samples_per_epoch=%d.png" % (100-vscores[1]*100,100-tscores[1]*100,j,i), bbox_inches='tight')
+fileName = "First_accuracy_val-Err=%.2f%%_test-Err=%.2f%%_samples_per_epoch=%d.png" % (100-vscores[1]*100,100-tscores[1]*100,j,i)
+plt.savefig(folder + fileName, bbox_inches='tight')
 
 # summarize history for loss
 plt.plot(history.history['loss'])
@@ -173,4 +174,5 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='lower right')
-plt.savefig(folder + "First_loss_val-Err=%.2f%%_test-Err=%.2f%%_samples_per_epoch=%d.png" %(100-vscores[1]*100,100-tscores[1]*100,j,i), bbox_inches='tight')
+fileName = "First_loss_val-Err=%.2f%%_test-Err=%.2f%%_samples_per_epoch=%d.png" %(100-vscores[1]*100,100-tscores[1]*100,j,i)
+plt.savefig(folder + fileName, bbox_inches='tight')
