@@ -75,7 +75,7 @@ print "validation data read"
 
 learn_r= 0.0001
 dec = 0.0000005
-reg = 0.000001
+reg = 0.0000001
 
 # define a simple CNN model
 def baseline_model():
