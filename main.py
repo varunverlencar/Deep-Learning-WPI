@@ -76,6 +76,7 @@ print "validation data read"
 learn_r= 0.0001
 dec = 0.00000000
 reg = 0
+
 # define a simple CNN model
 def baseline_model():
 	# create model
@@ -165,7 +166,8 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='lower right')
-plt.savefig(folder + "First_accuracy_val-Err=%.2f%%_test-Err=%.2f%%_samples_per_epoch=%d.png" % (100-vscores[1]*100,100-tscores[1]*100,j,i), bbox_inches='tight')
+fileName = "First_accuracy_val-Err=%.2f%%_test-Err=%.2f%%_samples_per_epoch=%d.png" % (100-vscores[1]*100,100-tscores[1]*100,j,i)
+plt.savefig(folder + fileName, bbox_inches='tight')
 
 # summarize history for loss
 plt.plot(history.history['loss'])
@@ -174,4 +176,5 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='lower right')
-plt.savefig(folder + "First_loss_val-Err=%.2f%%_test-Err=%.2f%%_samples_per_epoch=%d.png" %(100-vscores[1]*100,100-tscores[1]*100,j,i), bbox_inches='tight')
+fileName = "First_loss_val-Err=%.2f%%_test-Err=%.2f%%_samples_per_epoch=%d.png" %(100-vscores[1]*100,100-tscores[1]*100,j,i)
+plt.savefig(folder + fileName, bbox_inches='tight')

@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 dataset
 dataset5.zip
+=======
+dataset/
+>>>>>>> 44488e7914a286c87481f6b2f1c80b537a2fc384
 cleanDataset
-
+Deep-Learning-WPI
 Hand_varun.pem
 G2_Varun.pem
 Test_windows.pem
