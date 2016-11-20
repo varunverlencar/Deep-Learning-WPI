@@ -131,7 +131,7 @@ print 'fitting model'
 history = model.fit_generator(
 	train_generator,
 	samples_per_epoch=i,
-	nb_epoch=25,
+	nb_epoch=2,
 	validation_data=validation_generator,
 	nb_val_samples=j,
 	verbose = 2,
