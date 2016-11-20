@@ -12,7 +12,8 @@ from keras.utils import np_utils
 from keras.regularizers import l2, activity_l2
 from keras.optimizers import Adam
 from keras.layers.noise import GaussianNoise
-from keras.preprocessing.image import ImageDataGenerator
+from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
+
 import csv
 import os
 import h5py
@@ -29,16 +30,35 @@ numpy.random.seed(seed)
 def ensure_dir(f):
 	d = os.path.dirname(f)
 	if not os.path.exists(d):
- 		os.makedirs(d)
+		os.makedirs(d)
 
+shift = 0.2
 # this is the augmentation configuration we will use for training
-train_datagen = ImageDataGenerator(rescale=1./255)
+train_datagen = ImageDataGenerator(
+	rescale=1./255,
+	featurewise_center= True,  # set input mean to 0 over the dataset
+	samplewise_center=True,  # set each sample mean to 0
+	featurewise_std_normalization=True,  # divide inputs by std of the dataset
+	samplewise_std_normalization=True,  # divide each input by its std
+	zca_whitening=True,  # apply ZCA whitening
+	rotation_range=90,  # randomly rotate images in the range (degrees, 0 to 180)
+	width_shift_range=shift,  # randomly shift images horizontally (fraction of total width)
+	height_shift_range=shift,  # randomly shift images vertically (fraction of total height)
+	horizontal_flip=True,  # randomly flip images
+	vertical_flip=True)
 
 # this is the augmentation configuration we will use for validation
 validation_datagen = ImageDataGenerator(rescale=1./255)
 
 # this is the augmentation configuration we will use for testing
-test_datagen = ImageDataGenerator(rescale=1./255)
+test_datagen = ImageDataGenerator(
+	rescale=1./255,
+	featurewise_center= True,  # set input mean to 0 over the dataset
+	samplewise_center=True,  # set each sample mean to 0
+	featurewise_std_normalization=True,  # divide inputs by std of the dataset
+	samplewise_std_normalization=True,  # divide each input by its std
+	zca_whitening=True,  # apply ZCA whitening
+	)
 
 # this is a generator that will read pictures found in
 # subfolers of 'dataset/train', and indefinitely generate
@@ -49,6 +69,9 @@ train_generator = train_datagen.flow_from_directory(
 	target_size=(224, 224),
 	batch_size=10,
 	shuffle = True,
+	save_to_dir='Augmented',
+	save_prefix='aug', 
+	save_format='jpg'
 	class_mode='categorical')  
 
 print "training data read"
@@ -116,13 +139,10 @@ model = baseline_model()
 print "model built"
 print model.summary()
 
-i= 2000 #samples_per_epoch
-j= 800 #nb_val_samples
+i=2000 #samples_per_epoch
+j=800 #nb_val_samples
 
-folder = "Weights/Best/main/"
-ensure_dir(folder)
-
-filepath=folder + "weights.best.hdf5"
+filepath="weights.best.hdf5"
 checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
 callbacks_list = [checkpoint]
 
@@ -138,7 +158,7 @@ history = model.fit_generator(
 	callbacks = callbacks_list
 	)
 
-folder  = "Weights/main/"
+folder  = "Aug/Weights/main/"
 ensure_dir(folder)
 model.save_weights( folder +'first_try.h5')
 
@@ -160,7 +180,7 @@ print("Test Error: %.2f%%, for nb_val_samples=%d samples_per_epoch=%d" % (100-ts
 # writer.writeheader()
 # writer.writerow({'Baseline Error': 100-scores[1]*100,'Epoch': j,'Batch':i})
 
-folder  = "Images/main/"
+folder  = "Aug/Images/main/"
 ensure_dir(folder)
 
 # summarize history for accuracy
@@ -182,3 +202,4 @@ plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='lower right')
 fileName = "First_loss_val-Err=%.2f%%_test-Err=%.2f%%_samples_per_epoch=%d.png" %(100-vscores[1]*100,100-tscores[1]*100,j,i)
 plt.savefig(folder + fileName, bbox_inches='tight')
+
