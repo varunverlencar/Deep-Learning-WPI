@@ -142,9 +142,11 @@ print model.summary()
 i=2000 #samples_per_epoch
 j=800 #nb_val_samples
 
-filepath="weights.best.hdf5"
-checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
-callbacks_list = [checkpoint]
+#folder  = "Aug/Weights/Best/main/"
+#ensure_dir(folder)
+#filepath= folder + "weights.best.hdf5"
+#checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+#callbacks_list = [checkpoint]
 
 
 print 'fitting model'
@@ -155,7 +157,7 @@ history = model.fit_generator(
 	validation_data=validation_generator,
 	nb_val_samples=j,
 	verbose = 2,
-	callbacks = callbacks_list
+	#callbacks = callbacks_list
 	)
 
 folder  = "Aug/Weights/main/"
