@@ -73,9 +73,9 @@ test_generator = test_datagen.flow_from_directory(
 
 print "validation data read"
 
-learn_r= 0.0001
-dec = 0.00000000
-reg = 0
+learn_r= 0.000001
+dec = 0.0000000005
+reg = 0.0000001
 
 # define a simple CNN model
 def baseline_model():
@@ -86,7 +86,7 @@ def baseline_model():
 	# this is a placeholder tensor that will contain our generated images
 	input_img = first_layer.input
 
-	model.add(Convolution2D(64, 3, 3, activation='relu', name='conv1_1'))
+	model.add(Convolution2D(64, 3, 3, activation='relu', name='conv1_1',W_regularizer = l2(reg)))
 	model.add(ZeroPadding2D((1, 1)))
 	model.add(Convolution2D(64, 3, 3, activation='relu', name='conv1_2'))
 	model.add(MaxPooling2D((2, 2), strides=(2, 2)))
@@ -116,22 +116,23 @@ model = baseline_model()
 print "model built"
 print model.summary()
 
-i=2000 #samples_per_epoch
-j=800 #nb_val_samples
+i=10000 #samples_per_epoch
+j=3000 #nb_val_samples
 
-#filepath="weights.best.hdf5"
-#checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
-#callbacks_list = [checkpoint]
+filepath="weights.best.hdf5"
+checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+callbacks_list = [checkpoint]
 
 
 print 'fitting model'
 history = model.fit_generator(
 	train_generator,
 	samples_per_epoch=i,
-	nb_epoch=50,
+	nb_epoch=25,
 	validation_data=validation_generator,
 	nb_val_samples=j,
-	verbose = 2
+	verbose = 2,
+	callbacks = callbacks_list
 	)
 
 folder  = "Weights/main/"
