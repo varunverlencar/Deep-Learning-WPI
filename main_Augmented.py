@@ -116,10 +116,13 @@ model = baseline_model()
 print "model built"
 print model.summary()
 
-i=10000 #samples_per_epoch
-j=3000 #nb_val_samples
+i= 2000 #samples_per_epoch
+j= 800 #nb_val_samples
 
-filepath="weights.best.hdf5"
+folder = "Weights/Best/main/"
+ensure_dir(folder)
+
+filepath=folder + "weights.best.hdf5"
 checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
 callbacks_list = [checkpoint]
 
