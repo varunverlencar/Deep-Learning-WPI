@@ -47,10 +47,10 @@ train_datagen = ImageDataGenerator(
 	horizontal_flip=True,  # randomly flip images
 	vertical_flip=True)
 
-# this is the augmentation configuration we will use for validation
+# this is the augmentation configuration usde for validation
 validation_datagen = ImageDataGenerator(rescale=1./255)
 
-# this is the augmentation configuration we will use for testing
+# this is the augmentation configuration used for testing
 test_datagen = ImageDataGenerator(
 	rescale=1./255,
 	featurewise_center= True,  # set input mean to 0 over the dataset
@@ -71,7 +71,7 @@ train_generator = train_datagen.flow_from_directory(
 	shuffle = True,
 	save_to_dir='Augmented',
 	save_prefix='aug', 
-	save_format='jpg'
+	save_format='jpg',
 	class_mode='categorical')  
 
 print "training data read"
