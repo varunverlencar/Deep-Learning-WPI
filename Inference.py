@@ -48,7 +48,7 @@ if __name__ == "__main__":
     #    pickle.dump(my_list, f)
     with open(the_filename, 'rb') as f:
         my_list = pickle.load(f)
-    im = cv2.resize(cv2.imread('000.jpg'), (224, 224)).astype(np.float32)
+    im = cv2.resize(cv2.imread('Test/HandG.jpg'), (224, 224)).astype(np.float32)
     im[:,:,0] -= 103.939
     im[:,:,1] -= 116.779
     im[:,:,2] -= 123.68
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     dec = 0.0000005
     reg = 0.000001
     # Test pretrained model
-    model = baseline_model('weights.best.hdf5')
+    model = baseline_model('Weights/Best/main/weights.best.hdf5')
     opt = Adam(lr=learn_r, beta_1=0.9, beta_2=0.999, epsilon=1e-8, decay=dec)
     # Compile model
     model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
