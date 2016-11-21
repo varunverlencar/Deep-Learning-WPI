@@ -40,7 +40,7 @@ train_datagen = ImageDataGenerator(
 	samplewise_center=True,  # set each sample mean to 0
 	featurewise_std_normalization=True,  # divide inputs by std of the dataset
 	samplewise_std_normalization=True,  # divide each input by its std
-	zca_whitening=True,  # apply ZCA whitening
+	# zca_whitening=True,  # apply ZCA whitening
 	rotation_range=90,  # randomly rotate images in the range (degrees, 0 to 180)
 	width_shift_range=shift,  # randomly shift images horizontally (fraction of total width)
 	height_shift_range=shift,  # randomly shift images vertically (fraction of total height)
@@ -57,7 +57,7 @@ test_datagen = ImageDataGenerator(
 	samplewise_center=True,  # set each sample mean to 0
 	featurewise_std_normalization=True,  # divide inputs by std of the dataset
 	samplewise_std_normalization=True,  # divide each input by its std
-	zca_whitening=True,  # apply ZCA whitening
+	# zca_whitening=True,  # apply ZCA whitening
 	)
 
 # this is a generator that will read pictures found in
