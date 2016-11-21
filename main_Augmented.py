@@ -48,7 +48,14 @@ train_datagen = ImageDataGenerator(
 	vertical_flip=True)
 
 # this is the augmentation configuration usde for validation
-validation_datagen = ImageDataGenerator(rescale=1./255)
+validation_datagen = ImageDataGenerator(
+	rescale=1./255
+	        rotation_range=90,  # randomly rotate images in the range (degrees, 0
+        width_shift_range=shift,  # randomly shift images horizontally (fracti
+        height_shift_range=shift,  # randomly shift images vertically (fractio
+        horizontal_flip=True,  # randomly flip images
+        vertical_flip=True)
+	
 
 # this is the augmentation configuration used for testing
 test_datagen = ImageDataGenerator(
@@ -63,7 +70,7 @@ test_datagen = ImageDataGenerator(
 # this is a generator that will read pictures found in
 # subfolers of 'dataset/train', and indefinitely generate
 # batches of augmented image data
-ensure_dir(Augmented)
+
 train_generator = train_datagen.flow_from_directory(
 	'dataset/train',  # this is the target directory
 	target_size=(224, 224),
@@ -157,7 +164,7 @@ history = model.fit_generator(
 	validation_data=validation_generator,
 	nb_val_samples=j,
 	verbose = 2,
-	#callbacks = callbacks_list
+	callbacks = callbacks_list
 	)
 
 folder  = "Aug/Weights/main/"
