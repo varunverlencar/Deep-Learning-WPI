@@ -98,8 +98,8 @@ def baseline_model():
 	model.add(Dropout(0.3))
 
 	model.add(Flatten())
-	model.add(Dense(128	, activation='relu'))
-	model.add(Dropout(0.3))
+	#model.add(Dense(128	, activation='relu'))
+	#model.add(Dropout(0.3))
 	model.add(Dense(128	, activation='relu'))
 	model.add(Dropout(0.3))
 	model.add(Dense(5, activation='softmax'))
@@ -115,7 +115,7 @@ print "model built"
 print model.summary()
 
 i=2000 #samples_per_epoch
-j=900 #nb_val_samples
+j=800 #nb_val_samples
 
 filepath="weights.best.hdf5"
 checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
@@ -126,10 +126,11 @@ print 'fitting model'
 history = model.fit_generator(
 	train_generator,
 	samples_per_epoch=i,
-	nb_epoch=25,
+	nb_epoch=35,
 	validation_data=validation_generator,
 	nb_val_samples=j,
-	verbose = 2
+	verbose = 2,
+	callbacks = callbacks_list
 	)
 
 folder  = "Weights/main/"
@@ -164,7 +165,7 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='lower right')
-fileName = "First_accuracy_val-Err=%.2f%%_test-Err=%.2f%%_samples_per_epoch=%d.png" % (100-vscores[1]*100,100-tscores[1]*100,j,i)
+fileName = "First_accuracy_val.png" 
 plt.savefig(folder + fileName, bbox_inches='tight')
 
 # summarize history for loss
@@ -174,5 +175,5 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='lower right')
-fileName = "First_loss_val-Err=%.2f%%_test-Err=%.2f%%_samples_per_epoch=%d.png" %(100-vscores[1]*100,100-tscores[1]*100,j,i)
+fileName = "First_loss_val.png" 
 plt.savefig(folder + fileName, bbox_inches='tight')
