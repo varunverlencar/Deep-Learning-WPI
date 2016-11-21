@@ -42,24 +42,26 @@ train_datagen = ImageDataGenerator(
 	# samplewise_std_normalization=True,  # divide each input by its std
 	# zca_whitening=True,  # apply ZCA whitening
 	rotation_range=90,  # randomly rotate images in the range (degrees, 0 to 180)
-	width_shift_range=shift,  # randomly shift images horizontally (fraction of total width)
-	height_shift_range=shift,  # randomly shift images vertically (fraction of total height)
+	#width_shift_range=shift,  # randomly shift images horizontally (fraction of total width)
+	#height_shift_range=shift,  # randomly shift images vertically (fraction of total height)
 	horizontal_flip=True,  # randomly flip images
-	vertical_flip=True)
+	#vertical_flip=True
+	)
 
 # this is the augmentation configuration usde for validation
 validation_datagen = ImageDataGenerator(
-	rescale=1./255
-	        rotation_range=90,  # randomly rotate images in the range (degrees, 0
-        width_shift_range=shift,  # randomly shift images horizontally (fracti
-        height_shift_range=shift,  # randomly shift images vertically (fractio
+	rescale=1./255,
+	rotation_range=90,  # randomly rotate images in the range (degrees, 0
+        #width_shift_range=shift,  # randomly shift images horizontally (fracti
+        #height_shift_range=shift,  # randomly shift images vertically (fractio
         horizontal_flip=True,  # randomly flip images
-        vertical_flip=True)
+        #vertical_flip=True
+	)
 	
 
 # this is the augmentation configuration used for testing
 test_datagen = ImageDataGenerator(
-	rescale=1./255,
+	rescale=1./255
 	# featurewise_center= True,  # set input mean to 0 over the dataset
 	# samplewise_center=True,  # set each sample mean to 0
 	# featurewise_std_normalization=True,  # divide inputs by std of the dataset
@@ -74,7 +76,7 @@ test_datagen = ImageDataGenerator(
 train_generator = train_datagen.flow_from_directory(
 	'dataset/train',  # this is the target directory
 	target_size=(224, 224),
-	batch_size=10,
+	batch_size=5,
 	shuffle = True,
 	save_to_dir='Augmented',
 	save_prefix='aug', 
@@ -87,7 +89,7 @@ print "training data read"
 validation_generator = validation_datagen.flow_from_directory(
 	'dataset/validation',
 	target_size=(224, 224),
-	batch_size=10,
+	batch_size=5,
 	shuffle = True,
 	class_mode='categorical')
 
@@ -97,7 +99,7 @@ print "validation data read"
 test_generator = test_datagen.flow_from_directory(
 	'dataset/test',
 	target_size=(224, 224),
-	batch_size=10,
+	batch_size=5,
 	shuffle = True,
 	class_mode='categorical')
 
