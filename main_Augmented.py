@@ -36,10 +36,10 @@ shift = 0.2
 # this is the augmentation configuration we will use for training
 train_datagen = ImageDataGenerator(
 	rescale=1./255,
-	featurewise_center= True,  # set input mean to 0 over the dataset
-	samplewise_center=True,  # set each sample mean to 0
-	featurewise_std_normalization=True,  # divide inputs by std of the dataset
-	samplewise_std_normalization=True,  # divide each input by its std
+	# featurewise_center= True,  # set input mean to 0 over the dataset
+	# samplewise_center=True,  # set each sample mean to 0
+	# featurewise_std_normalization=True,  # divide inputs by std of the dataset
+	# samplewise_std_normalization=True,  # divide each input by its std
 	# zca_whitening=True,  # apply ZCA whitening
 	rotation_range=90,  # randomly rotate images in the range (degrees, 0 to 180)
 	width_shift_range=shift,  # randomly shift images horizontally (fraction of total width)
@@ -53,17 +53,17 @@ validation_datagen = ImageDataGenerator(rescale=1./255)
 # this is the augmentation configuration used for testing
 test_datagen = ImageDataGenerator(
 	rescale=1./255,
-	featurewise_center= True,  # set input mean to 0 over the dataset
-	samplewise_center=True,  # set each sample mean to 0
-	featurewise_std_normalization=True,  # divide inputs by std of the dataset
-	samplewise_std_normalization=True,  # divide each input by its std
+	# featurewise_center= True,  # set input mean to 0 over the dataset
+	# samplewise_center=True,  # set each sample mean to 0
+	# featurewise_std_normalization=True,  # divide inputs by std of the dataset
+	# samplewise_std_normalization=True,  # divide each input by its std
 	# zca_whitening=True,  # apply ZCA whitening
 	)
 
 # this is a generator that will read pictures found in
 # subfolers of 'dataset/train', and indefinitely generate
 # batches of augmented image data
-
+ensure_dir(Augmented)
 train_generator = train_datagen.flow_from_directory(
 	'dataset/train',  # this is the target directory
 	target_size=(224, 224),
@@ -142,11 +142,11 @@ print model.summary()
 i=2000 #samples_per_epoch
 j=800 #nb_val_samples
 
-#folder  = "Aug/Weights/Best/main/"
-#ensure_dir(folder)
-#filepath= folder + "weights.best.hdf5"
-#checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
-#callbacks_list = [checkpoint]
+folder  = "Aug/Weights/Best/main/"
+ensure_dir(folder)
+filepath= folder + "weights.best.hdf5"
+checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+callbacks_list = [checkpoint]
 
 
 print 'fitting model'
