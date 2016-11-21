@@ -44,8 +44,8 @@ train_datagen = ImageDataGenerator(
 	rotation_range=90,  # randomly rotate images in the range (degrees, 0 to 180)
 	#width_shift_range=shift,  # randomly shift images horizontally (fraction of total width)
 	#height_shift_range=shift,  # randomly shift images vertically (fraction of total height)
-	horizontal_flip=True,  # randomly flip images
-	#vertical_flip=True
+	#horizontal_flip=True,  # randomly flip images
+	vertical_flip=True
 	)
 
 # this is the augmentation configuration usde for validation
@@ -54,8 +54,8 @@ validation_datagen = ImageDataGenerator(
 	rotation_range=90,  # randomly rotate images in the range (degrees, 0
         #width_shift_range=shift,  # randomly shift images horizontally (fracti
         #height_shift_range=shift,  # randomly shift images vertically (fractio
-        horizontal_flip=True,  # randomly flip images
-        #vertical_flip=True
+        #horizontal_flip=True,  # randomly flip images
+        vertical_flip=True
 	)
 	
 
@@ -105,7 +105,7 @@ test_generator = test_datagen.flow_from_directory(
 
 print "validation data read"
 
-learn_r= 0.0001
+learn_r= 0.000001
 dec = 0.0000005
 reg = 0.0000001
 
