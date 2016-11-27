@@ -18,7 +18,7 @@ import csv
 import os
 import h5py
 import matplotlib as mpl
-mpl.use('Agg')
+# mpl.use('Agg')
 import matplotlib.pyplot as plt
 from keras import backend as K
 K.set_image_dim_ordering('th')
@@ -41,31 +41,37 @@ train_datagen = ImageDataGenerator(
 	# featurewise_std_normalization=True,  # divide inputs by std of the dataset
 	# samplewise_std_normalization=True,  # divide each input by its std
 	# zca_whitening=True,  # apply ZCA whitening
+	zoom_range=0.2,
 	rotation_range=90,  # randomly rotate images in the range (degrees, 0 to 180)
-	#width_shift_range=shift,  # randomly shift images horizontally (fraction of total width)
-	#height_shift_range=shift,  # randomly shift images vertically (fraction of total height)
-	#horizontal_flip=True,  # randomly flip images
-	vertical_flip=True
+	width_shift_range=shift,  # randomly shift images horizontally (fraction of total width)
+	height_shift_range=shift,  # randomly shift images vertically (fraction of total height)
+	horizontal_flip=True,  # randomly flip images
+	vertical_flip=True,
+	fill_mode='nearest'
 	)
 
 # this is the augmentation configuration usde for validation
 validation_datagen = ImageDataGenerator(
 	rescale=1./255,
+	# featurewise_center= True,  # set input mean to 0 over the dataset
+	# samplewise_center=True,  # set each sample mean to 0
+	# featurewise_std_normalization=True,  # divide inputs by std of the dataset
+	# samplewise_std_normalization=True,  # divide each input by its std
+	# zca_whitening=True,  # apply ZCA whitening
+	zoom_range=0.2,
 	rotation_range=90,  # randomly rotate images in the range (degrees, 0
-        #width_shift_range=shift,  # randomly shift images horizontally (fracti
-        #height_shift_range=shift,  # randomly shift images vertically (fractio
-        #horizontal_flip=True,  # randomly flip images
-        vertical_flip=True
+	width_shift_range=shift,  # randomly shift images horizontally (fracti
+	height_shift_range=shift,  # randomly shift images vertically (fractio
+	horizontal_flip=True,  # randomly flip images
+	vertical_flip=True,
+	fill_mode='nearest'
 	)
 	
 
 # this is the augmentation configuration used for testing
 test_datagen = ImageDataGenerator(
 	rescale=1./255
-	# featurewise_center= True,  # set input mean to 0 over the dataset
-	# samplewise_center=True,  # set each sample mean to 0
-	# featurewise_std_normalization=True,  # divide inputs by std of the dataset
-	# samplewise_std_normalization=True,  # divide each input by its std
+	
 	# zca_whitening=True,  # apply ZCA whitening
 	)
 
@@ -78,9 +84,6 @@ train_generator = train_datagen.flow_from_directory(
 	target_size=(224, 224),
 	batch_size=5,
 	shuffle = True,
-	save_to_dir='Augmented',
-	save_prefix='aug', 
-	save_format='jpg',
 	class_mode='categorical')  
 
 print "training data read"
@@ -103,11 +106,11 @@ test_generator = test_datagen.flow_from_directory(
 	shuffle = True,
 	class_mode='categorical')
 
-print "validation data read"
+print "test data read"
 
 learn_r= 0.000001
 dec = 0.0000005
-reg = 0.0000001
+reg = 0.000000001
 
 # define a simple CNN model
 def baseline_model():
@@ -148,8 +151,8 @@ model = baseline_model()
 print "model built"
 print model.summary()
 
-i=2000 #samples_per_epoch
-j=800 #nb_val_samples
+i=5000 #samples_per_epoch
+j=1600 #nb_val_samples
 
 folder  = "Aug/Weights/Best/main/"
 ensure_dir(folder)
@@ -179,17 +182,6 @@ print("Validation Error: %.2f%%, for nb_val_samples=%d samples_per_epoch=%d" % (
 tscores = model.evaluate_generator(test_generator,
 	val_samples = j)
 print("Test Error: %.2f%%, for nb_val_samples=%d samples_per_epoch=%d" % (100-tscores[1]*100,j,i))
-
-
-# Final evaluation of the model
-# scores = model.evaluate(X_test, y_test, verbose=0)
-# print("CNN Error: %.2f%%, for nb_epoch=%d batch_size=%d" % (100-scores[1]*100,j,i))
-
-# csvfile =  open('.csv', 'a')
-# fieldnames = [' Error', 'Epoch','Batch']
-# writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-# writer.writeheader()
-# writer.writerow({'Baseline Error': 100-scores[1]*100,'Epoch': j,'Batch':i})
 
 folder  = "Aug/Images/main/"
 ensure_dir(folder)

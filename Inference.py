@@ -2,10 +2,25 @@ from keras.models import Sequential
 from keras.layers.core import Flatten, Dense, Dropout
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, ZeroPadding2D
 from keras.optimizers import SGD
-
+from keras import backend as K
+K.set_image_dim_ordering('th')
+from keras.regularizers import l2, activity_l2
+from keras.optimizers import Adam
 import cv2, numpy as np
 import pickle
-    
+
+def output_label(out): 
+    if out == 0:
+        return 'Gesture-1'
+    elif out == 1:
+        return 'Gesture-2'
+    elif out == 2:
+        return 'Gesture-3'
+    elif out == 3:
+        return 'Gesture-4'
+    elif out == 4:
+        return 'Gesture-5'
+
 def baseline_model(weights_path=None):
     # create model
     model = Sequential()
@@ -46,25 +61,28 @@ if __name__ == "__main__":
     the_filename='HandGesture.txt'
     #with open(the_filename, 'wb') as f:
     #    pickle.dump(my_list, f)
-    with open(the_filename, 'rb') as f:
-        my_list = pickle.load(f)
-    im = cv2.resize(cv2.imread('Test/HandG.jpg'), (224, 224)).astype(np.float32)
+    # with open(the_filename, 'rb') as f:
+    #     my_list = pickle.load(f)
+    im = cv2.resize(cv2.imread('hand4.jpg'), (224, 224)).astype(np.float32)
     im[:,:,0] -= 103.939
     im[:,:,1] -= 116.779
     im[:,:,2] -= 123.68
     im = im.transpose((2,0,1))
     im = np.expand_dims(im, axis=0)
 
-    learn_r= 0.0001
+    learn_r= 0.00001
     dec = 0.0000005
-    reg = 0.000001
+    reg = 0.0001
     # Test pretrained model
-    model = baseline_model('Weights/Best/main/weights.best.hdf5')
+    model = baseline_model('Weights/Best/main/weights.2best.hdf5')
     opt = Adam(lr=learn_r, beta_1=0.9, beta_2=0.999, epsilon=1e-8, decay=dec)
     # Compile model
     model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
     out = model.predict(im)
-    #print np.argmax(out)
+    print out
+    print np.argmax(out)
+    print output_label(np.argmax(out))
+
     #print my_list[np.argmax(out)]
     
     

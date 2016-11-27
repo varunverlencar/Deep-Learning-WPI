@@ -17,7 +17,7 @@ import csv
 import os
 import h5py
 import matplotlib as mpl
-mpl.use('Agg')
+# mpl.use('Agg')
 import matplotlib.pyplot as plt
 from keras import backend as K
 K.set_image_dim_ordering('th')
@@ -73,9 +73,9 @@ test_generator = test_datagen.flow_from_directory(
 
 print "validation data read"
 
-learn_r= 0.0001
+learn_r= 0.00001
 dec = 0.0000005
-reg = 0.000001
+reg = 0.0001
 
 # define a simple CNN model
 def baseline_model():
@@ -116,13 +116,13 @@ model = baseline_model()
 print "model built"
 print model.summary()
 
-i=2000 #samples_per_epoch
-j=800 #nb_val_samples
+i=5000 #samples_per_epoch
+j=1600 #nb_val_samples
 
 folder  = "Weights/Best/main/"
 ensure_dir(folder)
 
-filepath=folder +"weights.best.hdf5"
+filepath=folder +"weights.2best.hdf5"
 checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
 callbacks_list = [checkpoint]
 
@@ -140,7 +140,7 @@ history = model.fit_generator(
 
 folder  = "Weights/main/"
 ensure_dir(folder)
-model.save_weights( folder +'first_try.h5')
+model.save_weights( folder +'2_try.h5')
 
 vscores = model.evaluate_generator(validation_generator,val_samples = j)
 print("Validation Error: %.2f%%, for nb_val_samples=%d samples_per_epoch=%d" % (100-vscores[1]*100,j,i))
@@ -148,17 +148,6 @@ print("Validation Error: %.2f%%, for nb_val_samples=%d samples_per_epoch=%d" % (
 tscores = model.evaluate_generator(test_generator,
 	val_samples = j)
 print("Test Error: %.2f%%, for nb_val_samples=%d samples_per_epoch=%d" % (100-tscores[1]*100,j,i))
-
-
-# Final evaluation of the model
-# scores = model.evaluate(X_test, y_test, verbose=0)
-# print("CNN Error: %.2f%%, for nb_epoch=%d batch_size=%d" % (100-scores[1]*100,j,i))
-
-# csvfile =  open('.csv', 'a')
-# fieldnames = [' Error', 'Epoch','Batch']
-# writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-# writer.writeheader()
-# writer.writerow({'Baseline Error': 100-scores[1]*100,'Epoch': j,'Batch':i})
 
 folder  = "Images/main/"
 ensure_dir(folder)
@@ -170,7 +159,7 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='lower right')
-fileName = "First_accuracy.png"
+fileName = "2_accuracy.png"
 plt.savefig(folder + fileName, bbox_inches='tight')
 
 # summarize history for loss
@@ -180,5 +169,5 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='lower right')
-fileName = "First_loss.png" 
+fileName = "2_loss.png" 
 plt.savefig(folder + fileName, bbox_inches='tight')

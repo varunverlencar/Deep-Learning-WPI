@@ -1,10 +1,26 @@
 from keras.models import Sequential
 from keras.layers.core import Flatten, Dense, Dropout
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, ZeroPadding2D
+from keras.regularizers import l2, activity_l2
+from keras.optimizers import Adam
+from keras.layers.noise import GaussianNoise
 from keras.optimizers import SGD
-
+from keras import backend as K
+K.set_image_dim_ordering('th')
 import cv2, numpy as np
 import pickle
+   
+def output_label(out): 
+    if out == 0:
+        return 'Gesture-1'
+    elif out == 1:
+        return 'Gesture-2'
+    elif out == 2:
+        return 'Gesture-3'
+    elif out == 3:
+        return 'Gesture-4'
+    elif out == 4:
+        return 'Gesture-5'
     
 def baseline_model(weights_path=None):
     # create model
@@ -59,11 +75,11 @@ if __name__ == "__main__":
     dec = 0.0000005
     reg = 0.000001
     # Test pretrained model
-    model = baseline_model('weights.best.hdf5')
+    model = baseline_model('Weights/Best/main/WPI-HandGesture_Wieghts.hdf5')
     opt = Adam(lr=learn_r, beta_1=0.9, beta_2=0.999, epsilon=1e-8, decay=dec)
     # Compile model
     model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
-    out = model.predict(im)
+    # out = model.predict(im)
     #print np.argmax(out)
     #print my_list[np.argmax(out)]
     
@@ -103,6 +119,7 @@ if __name__ == "__main__":
         im = np.expand_dims(im, axis=0)
         
         out = model.predict(im)
+        # output_label(out)
         #print np.argmax(out)
         #print my_list[np.argmax(out)]
         
@@ -117,9 +134,9 @@ if __name__ == "__main__":
         
         # Write some Text
         font = cv2.FONT_HERSHEY_SIMPLEX
-        cv2.putText(resized,my_list[np.argmax(out)],(20,450), font, 1, (255,255,255),1,1)
+        cv2.putText(resized,output_label(np.argmax(out)),(20,450), font, 1, (255,255,255),1,1)
         # Display the resulting frame
-        cv2.imshow('DeepNN-ABB',resized)
+        cv2.imshow('WPI-Hand_Gestures-varun',resized)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     # When everything done, release the capture
