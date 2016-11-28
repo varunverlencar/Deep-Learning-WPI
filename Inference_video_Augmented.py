@@ -30,7 +30,7 @@ def baseline_model(weights_path=None):
     # this is a placeholder tensor that will contain our generated images
     input_img = first_layer.input
 
-    model.add(Convolution2D(64, 3, 3, activation='relu', name='conv1_1',W_regularizer = l2(reg)))
+    model.add(Convolution2D(64, 3, 3, activation='relu', name='conv1_1', W_regularizer = l2(reg)))
     model.add(ZeroPadding2D((1, 1)))
     model.add(Convolution2D(64, 3, 3, activation='relu', name='conv1_2'))
     model.add(MaxPooling2D((2, 2), strides=(2, 2)))
@@ -44,10 +44,10 @@ def baseline_model(weights_path=None):
     model.add(Dropout(0.3))
 
     model.add(Flatten())
-    model.add(Dense(128 , activation='relu'))
-    model.add(Dropout(0.3))
-    model.add(Dense(128 , activation='relu'))
-    model.add(Dropout(0.3))
+    model.add(Dense(256 , activation='relu'))
+    model.add(Dropout(0.4))
+    model.add(Dense(256 , activation='relu'))
+    model.add(Dropout(0.4))
     model.add(Dense(5, activation='softmax'))
 
     
@@ -61,8 +61,8 @@ def baseline_model(weights_path=None):
 if __name__ == "__main__":
 
     learn_r= 0.0001
-    dec = 0.0000005
-    reg = 0.000001
+    dec = 0.000000
+    reg = 0.000000001
     # Test pretrained model
     model = baseline_model('Weights/Best/main/WPI-HandGesture_Wieghts.hdf5')
     opt = Adam(lr=learn_r, beta_1=0.9, beta_2=0.999, epsilon=1e-8, decay=dec)

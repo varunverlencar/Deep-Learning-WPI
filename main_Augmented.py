@@ -41,12 +41,12 @@ train_datagen = ImageDataGenerator(
 	# featurewise_std_normalization=True,  # divide inputs by std of the dataset
 	# samplewise_std_normalization=True,  # divide each input by its std
 	# zca_whitening=True,  # apply ZCA whitening
-	zoom_range=0.2,
+	zoom_range=0.3,
 	rotation_range=90,  # randomly rotate images in the range (degrees, 0 to 180)
 	width_shift_range=shift,  # randomly shift images horizontally (fraction of total width)
 	height_shift_range=shift,  # randomly shift images vertically (fraction of total height)
-	horizontal_flip=True,  # randomly flip images
-	vertical_flip=True,
+	# horizontal_flip=True,  # randomly flip images
+	# vertical_flip=True,
 	fill_mode='nearest'
 	)
 
@@ -58,12 +58,12 @@ validation_datagen = ImageDataGenerator(
 	# featurewise_std_normalization=True,  # divide inputs by std of the dataset
 	# samplewise_std_normalization=True,  # divide each input by its std
 	# zca_whitening=True,  # apply ZCA whitening
-	zoom_range=0.2,
+	zoom_range=0.3,
 	rotation_range=90,  # randomly rotate images in the range (degrees, 0
 	width_shift_range=shift,  # randomly shift images horizontally (fracti
 	height_shift_range=shift,  # randomly shift images vertically (fractio
-	horizontal_flip=True,  # randomly flip images
-	vertical_flip=True,
+	# horizontal_flip=True,  # randomly flip images
+	# vertical_flip=True,
 	fill_mode='nearest'
 	)
 	
@@ -81,8 +81,8 @@ test_datagen = ImageDataGenerator(
 
 train_generator = train_datagen.flow_from_directory(
 	'dataset/train',  # this is the target directory
-	target_size=(224, 224),
-	batch_size=5,
+	# target_size=(224, 224),
+	batch_size=10,
 	shuffle = True,
 	class_mode='categorical')  
 
@@ -91,8 +91,8 @@ print "training data read"
 # this is a similar generator, for validation data
 validation_generator = validation_datagen.flow_from_directory(
 	'dataset/validation',
-	target_size=(224, 224),
-	batch_size=5,
+	# target_size=(224, 224),
+	batch_size=10,
 	shuffle = True,
 	class_mode='categorical')
 
@@ -101,16 +101,16 @@ print "validation data read"
 # this is a similar generator, for validation data
 test_generator = test_datagen.flow_from_directory(
 	'dataset/test',
-	target_size=(224, 224),
-	batch_size=5,
+	# target_size=(224, 224),
+	batch_size=10,
 	shuffle = True,
 	class_mode='categorical')
 
 print "test data read"
 
-learn_r= 0.000001
-dec = 0.0000005
-reg = 0.000000001
+learn_r= 0.01
+dec = 0.000000
+reg = 0.00000000
 
 # define a simple CNN model
 def baseline_model():
@@ -134,11 +134,21 @@ def baseline_model():
 	model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 	model.add(Dropout(0.3))
 
+
+	model.add(ZeroPadding2D((1, 1)))
+	model.add(Convolution2D(256, 3, 3, activation='relu', name='conv3_1'))
+	model.add(ZeroPadding2D((1, 1)))
+	model.add(Convolution2D(256, 3, 3, activation='relu', name='conv3_2'))
+	model.add(ZeroPadding2D((1, 1)))
+	model.add(Convolution2D(256, 3, 3, activation='relu', name='conv3_3'))
+	model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+	model.add(Dropout(0.3))
+
 	model.add(Flatten())
-	model.add(Dense(128	, activation='relu'))
-	model.add(Dropout(0.3))
-	model.add(Dense(128	, activation='relu'))
-	model.add(Dropout(0.3))
+	model.add(Dense(256	, activation='relu'))
+	model.add(Dropout(0.5))
+	model.add(Dense(256	, activation='relu'))
+	model.add(Dropout(0.5))
 	model.add(Dense(5, activation='softmax'))
 
 	opt = Adam(lr=learn_r, beta_1=0.9, beta_2=0.999, epsilon=1e-8, decay=dec)
@@ -165,16 +175,16 @@ print 'fitting model'
 history = model.fit_generator(
 	train_generator,
 	samples_per_epoch=i,
-	nb_epoch=25,
+	nb_epoch=50,
 	validation_data=validation_generator,
 	nb_val_samples=j,
 	verbose = 2,
 	callbacks = callbacks_list
 	)
 
-folder  = "Aug/Weights/main/"
-ensure_dir(folder)
-model.save_weights( folder +'first_try.h5')
+# folder  = "Aug/Weights/main/"
+# ensure_dir(folder)
+# model.save_weights( folder +'first_try.h5')
 
 vscores = model.evaluate_generator(validation_generator,val_samples = j)
 print("Validation Error: %.2f%%, for nb_val_samples=%d samples_per_epoch=%d" % (100-vscores[1]*100,j,i))

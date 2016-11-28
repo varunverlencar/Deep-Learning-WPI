@@ -21,3 +21,9 @@ Augmented
 weights
 hand*.jpg
 Software
+
+Aug_vgg16.py
+VGG16
+VGG16.py
+testImages/
+txt/
